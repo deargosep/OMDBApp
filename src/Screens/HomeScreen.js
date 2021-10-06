@@ -13,14 +13,12 @@ export default function HomeScreen({ navigation }) {
     const [error, setError] = React.useState('')
     const [year, setYear] = React.useState('2020')
     const [type, setType] = React.useState('')
-    const [confirmed, setConfirmed] = React.useState(false)
 
     let getData = () => {
         setLoading(true)
         axios.get(`http://www.omdbapi.com/?s=Game&y=2020&apikey=${apikey}`).then(({ data }) => {
             setData(data)
             setLoading(false)
-            console.log(data)
         })
     }
 
@@ -43,13 +41,14 @@ export default function HomeScreen({ navigation }) {
         }
     }
 
+
     let goToResults = () => {
         let filter = {
             year: year,
             type: type
         }
         if (error === '') {
-            navigation.navigate('Result', { search: search, filter: confirmed ? filter : {} })
+            navigation.navigate('Result', { search: search, filter: filter })
         }
     }
 
@@ -60,34 +59,32 @@ export default function HomeScreen({ navigation }) {
 
     React.useEffect(() => {
         getData()
+        validate('')
     }, [])
 
     let header =
         <View>
             <View>
-                <Title style={{ textAlign: 'center' }}>Year</Title>
+                <Title style={styles.textCenter}>Year</Title>
                 <Picker selectedValue={year.toString()} onValueChange={setYear}>
                     <Picker.Item value={''} label='Choose year' />
                     {getYears().map(el => <Picker.Item key={el} value={el.toString()} label={`${el}`} />)}
                 </Picker>
-                <Title style={{ textAlign: 'center' }}>Type</Title>
+                <Title style={styles.textCenter}>Type</Title>
                 <Picker selectedValue={type} onValueChange={setType}>
                     <Picker.Item value={''} label='Choose type' />
                     <Picker.Item value="Movies" label="Movies" />
                     <Picker.Item value="Series" label="Series" />
                     <Picker.Item value="Episode" label="Episode" />
                 </Picker>
-                <View style={{ flexDirection: 'row', alignContent: 'center', justifyContent: 'space-between' }}>
-                    <Button onPress={clearFilters}>Clear</Button>
-                    <Button onPress={() => setConfirmed(!confirmed)}>Confirm</Button>
-                </View>
+                <Button onPress={clearFilters}>Clear</Button>
             </View>
             <View style={styles.inputRow}>
-                <View style={{ width: '75%' }}>
-                    <TextInput error={error} onSubmitEditing={goToResults} label="Search" onChangeText={validate} value={search} mode={'flat'} placeholder="search.." />
+                <View style={styles.input}>
+                    <TextInput error={error !== ''} onSubmitEditing={goToResults} label="Search" onChangeText={validate} value={search} mode={'flat'} placeholder="search.." />
                     {
                         error !== '' &&
-                        <Text style={{ color: 'red' }}>{error}</Text>
+                        <Text style={styles.error}>{error}</Text>
                     }
                 </View>
                 <Button onPress={goToResults}>Search</Button>
@@ -112,13 +109,21 @@ const styles = StyleSheet.create({
     },
     container: {
         padding: 16,
-        flexGrow: 1,
         flex: 1,
         // justifyContent: 'space-between'
     },
+    error: {
+        color: 'red'
+    },
+    textCenter: {
+        textAlign: 'center'
+    },
+    input:{
+        width: '65%'
+    },
     inputRow: {
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignContent: 'center',
         alignItems: 'center',
         height: 100

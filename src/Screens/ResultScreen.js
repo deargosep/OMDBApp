@@ -13,7 +13,6 @@ export default function ResultScreen({ navigation, route }) {
         let url = `http://www.omdbapi.com/?s=${search}&${filter.year && `y=${filter.year}&`}${filter.type && `type=${filter.type}`}&apikey=${apikey}`
         setLoading(true)
         axios.get(url).then(({ data }) => {
-            console.log(data)
             if (data.Response !== 'False') {
                 setData(data)
             } else {
@@ -48,7 +47,7 @@ export default function ResultScreen({ navigation, route }) {
 function Empty({ error }) {
     if (error) return (
         <View style={styles.empty}>
-            <Title style={{ color: 'red' }}>{error}</Title>
+            <Title style={styles.error}>{error}</Title>
         </View>
     )
     return (
@@ -63,10 +62,13 @@ const styles = StyleSheet.create({
         flex: 1
     },
     container: {
-        padding: 16,
+        paddingHorizontal: 16,
         flexGrow: 1,
         flex: 1,
         justifyContent: 'space-between'
+    },
+    error: {
+        color:'red'
     },
     inputRow: {
         flexDirection: 'row',
