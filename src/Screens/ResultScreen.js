@@ -36,7 +36,7 @@ export default function ResultScreen({ navigation, route }) {
                     loading ?
                         <ActivityIndicator />
                         :
-                        <FlatList ListEmptyComponent={<Empty error={error} />} data={data.Search} renderItem={({ item }) => <Movie item={item} />} />
+                        <FlatList showsVerticalScrollIndicator={false} ListEmptyComponent={<Empty error={error} />} data={data.Search} renderItem={({ item }) => <Movie item={item} />} />
                 }
             </View>
         </View>

@@ -47,7 +47,7 @@ export default function HomeScreen({ navigation }) {
             year: year,
             type: type
         }
-        if (error === '') {
+        if (error === '' && search !== '') {
             navigation.navigate('Result', { search: search, filter: filter })
         }
     }
@@ -59,7 +59,6 @@ export default function HomeScreen({ navigation }) {
 
     React.useEffect(() => {
         getData()
-        validate('')
     }, [])
 
     let header =
@@ -87,7 +86,7 @@ export default function HomeScreen({ navigation }) {
                         <Text style={styles.error}>{error}</Text>
                     }
                 </View>
-                <Button onPress={goToResults}>Search</Button>
+                <Button disabled={error !== '' || search === ''} onPress={goToResults}>Search</Button>
             </View>
             <Title>Recommended movies</Title>
         </View >
